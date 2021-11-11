@@ -39,11 +39,11 @@ const handleGrantPermission = () => {
     "
   >
     <Header />
-    <div class="py-40 px-40 flex space-y-14 flex-col items-start">
-      <h2 class="font-black text-white capitalize text-9xl leading-9">
+    <div class="py-40 px-40 flex space-y-8 flex-col items-start">
+      <h2 class="font-black text-green-200 capitalize text-9xl">
         Mix it your way.
       </h2>
-      <p class="w-3/4 mb-10 font-bold text-5xl">
+      <p class="w-3/4 mb-10 text-white font-bold text-5xl">
         Be a DJ of your own by creating a mix of songs from your favourite
         artists.
       </p>
