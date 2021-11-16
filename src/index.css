@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: "Lufga";
-  src: url("./assets/fonts/Lufga-ExtraLight.woff") format("woff");
+  src: url("fonts/Lufga-ExtraLight.woff") format("woff");
   font-weight: 200;
   font-style: normal;
   font-display: swap;
@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: "Lufga";
-  src: url("./assets/fonts/Lufga-Black.woff") format("woff");
+  src: url("fonts/Lufga-Black.woff") format("woff");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -19,7 +19,7 @@
 
 @font-face {
   font-family: "Lufga";
-  src: url("./assets/fonts/Lufga-ExtraBold.woff") format("woff");
+  src: url("fonts/Lufga-ExtraBold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -27,7 +27,7 @@
 
 @font-face {
   font-family: "Lufga";
-  src: url("./assets/fonts/Lufga-Bold.woff") format("woff");
+  src: url("fonts/Lufga-Bold.woff") format("woff");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -35,7 +35,7 @@
 
 @font-face {
   font-family: "Lufga";
-  src: url("./assets/fonts/Lufga-Medium.woff") format("woff");
+  src: url("fonts/Lufga-Medium.woff") format("woff");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -43,7 +43,7 @@
 
 @font-face {
   font-family: "Lufga";
-  src: url("./assets/fonts/Lufga-Light.woff") format("woff");
+  src: url("fonts/Lufga-Light.woff") format("woff");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -51,7 +51,7 @@
 
 @font-face {
   font-family: "Lufga";
-  src: url("./assets/fonts/Lufga-SemiBold.woff") format("woff");
+  src: url("fonts/Lufga-SemiBold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -59,7 +59,7 @@
 
 @font-face {
   font-family: "Lufga";
-  src: url("./assets/fonts/Lufga-Regular.woff") format("woff");
+  src: url("fonts/Lufga-Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -67,7 +67,7 @@
 
 @font-face {
   font-family: "Lufga";
-  src: url("./assets/fonts/Lufga-Thin.woff") format("woff");
+  src: url("fonts/Lufga-Thin.woff") format("woff");
   font-weight: 100;
   font-style: normal;
   font-display: swap;

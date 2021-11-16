@@ -52,10 +52,10 @@ const handleGrantPermission = (channel: string) => {
           text-green-400
           capitalize
           text-6xl
-          md:text-9xl
+          md:text-8xl
           leading-none
           w-full
-          md:w-3/5
+          md:w-9/12
         "
       >
         Create your own mix.
@@ -63,11 +63,11 @@ const handleGrantPermission = (channel: string) => {
       <p
         class="
           w-full
-          md:w-3/6
+          md:w-3/5
           text-white
           font-regular
           text-xl
-          md:text-3xl
+          md:text-2xl
           leading-snug
           mb-4
           mt-4
@@ -94,10 +94,10 @@ const handleGrantPermission = (channel: string) => {
             bg-white
             hover:bg-gray-800
             text-green-600 text-lg
-            md:text-xl
+            md:text-lg
             font-bold
-            py-5
-            px-5
+            py-4
+            px-4
             flex
             items-center
             space-x-2
@@ -115,11 +115,11 @@ const handleGrantPermission = (channel: string) => {
             bg-green-600
             hover:bg-green-800
             text-white
-            md:text-xl
+            md:text-lg
             text-lg
             font-bold
-            py-5
-            px-5
+            py-4
+            px-4
             flex
             items-center
             space-x-2

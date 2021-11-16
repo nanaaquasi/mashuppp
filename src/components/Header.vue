@@ -25,9 +25,15 @@ const showDropdown = () => {
       justify-between
     "
   >
-    <h1 class="p-0 m-0 text-xl md:text-3xl text-white font-extrabold">
-      Mashuppp.
-    </h1>
+    <div class="flex items-center space-x-2">
+      <img
+        src="https://img.icons8.com/external-those-icons-fill-those-icons/24/26e07f/external-dj-party-event-those-icons-fill-those-icons.png"
+      />
+      <h1 class="p-0 m-0 text-xl md:text-3xl text-white font-extrabold">
+        Mashuppp.
+      </h1>
+    </div>
+
     <ul class="flex items-center justify-end text-white font-bold md:w-1/5">
       <!-- <router-link class="hover:text-yellow-300" to="/">Home</router-link> -->
       <!-- <router-link class="hover:text-yellow-300" to="/about">About</router-link> -->
@@ -40,7 +46,7 @@ const showDropdown = () => {
           <div>
             <img class="w-10 h-10 rounded-full" :src="user.profileImage" />
           </div>
-          <li class="hover:text-yellow-300 md:block" to="/profile">
+          <li class="hover:text-green-300 md:block" to="/profile">
             {{ user.name }}
           </li>
         </div>
@@ -60,7 +66,7 @@ const showDropdown = () => {
             cursor-pointer
           "
         >
-          <li class="hover:text-gray-800">Account</li>
+          <!-- <li class="hover:text-gray-800">Account</li> -->
           <li class="hover:text-gray-800" @click="logoutUser">Logout</li>
         </ul>
       </div>
