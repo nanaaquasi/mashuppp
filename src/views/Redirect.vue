@@ -11,7 +11,7 @@ const getAccessTokenFromUrl = async () => {
   try {
     const { access_token } = getParamValues(hash);
 
-    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("SPOTIFY_access_token", access_token);
 
     router.push("/welcome");
   } catch (error) {

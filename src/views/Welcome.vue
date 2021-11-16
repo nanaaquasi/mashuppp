@@ -28,10 +28,10 @@ const showAutocomplete = ref(false);
 const isPlaying = ref(false);
 const isSuccessful = ref(false);
 
-const trackCount = ref(selectedArtists.value.length * 10);
+const getSelectedArtists = computed(() => selectedArtists.value);
+const trackCount = ref(10);
 const playlistName = ref("");
 const artists = computed(() => searchResults.value);
-const getSelectedArtists = computed(() => selectedArtists.value);
 const shuffledTrackUris = computed(() =>
   shuffledTracks.value.map((track) => track.uri)
 );
@@ -181,17 +181,19 @@ getUserProfile();
 <template>
   <div class="h-full w-full">
     <Header />
-    <div class="w-full flex flex-col items-center bg-green-500 pb-14">
-      <div class="flex flex-col items-center mt-10 space-y-3 mb-5">
-        <h1 class="text-black font-black text-7xl">
+    <div class="w-full flex flex-col items-center bg-gray-900 pb-14">
+      <div
+        class="flex flex-col items-center mt-10 pt-2 md:pt-10 space-y-3 mb-5"
+      >
+        <h1 class="text-green-400 font-semibold text-4xl md:text-7xl">
           Welcome, DJ {{ user.name }}.
         </h1>
-        <p class="text-gray-600 font-medium text-xl">
+        <p class="text-white text-center font-regular text-lg md:text-xl">
           Start by adding your favourite artists for the mashup
         </p>
       </div>
 
-      <div class="flex flex-col w-1/2">
+      <div class="flex flex-col w-11/12 md:w-1/2">
         <input
           v-model="searchQuery"
           class="
@@ -237,9 +239,30 @@ getUserProfile();
       class="mt-4 flex flex-col items-center"
     >
       <p class="text-xl font-bold mb-4">Give me a mix of</p>
-      <ul class="list-style-none flex space-x-2 mb-8">
+      <ul
+        class="
+          list-style-none
+          flex
+          justify-center
+          flex-wrap
+          md:flex-nowrap md:space-x-2
+          mb-8
+        "
+      >
         <li
-          class="bg-gray-800 flex items-center space-x-5 py-3 px-5 rounded-full"
+          class="
+            bg-gray-800
+            flex
+            items-center
+            space-x-5
+            mt-2
+            md:mt-0
+            py-3
+            px-5
+            rounded-full
+            mx-1
+            md:mx-0
+          "
           v-for="(artist, index) in getSelectedArtists"
           :key="index"
         >
@@ -260,10 +283,10 @@ getUserProfile();
 
       <div
         v-if="getSelectedArtists.length > 1"
-        class="w-1/2 flex items-center justify-center space-x-5"
+        class="md:w-1/2 flex items-center justify-center space-x-5"
       >
         <select
-          class="border-2 border-green-800 w-3/6 px-5 py-4"
+          class="border-2 border-green-800 w-11/12 md:w-3/6 px-5 py-4"
           v-model="trackCount"
           id="count"
           placeholder="Select total tracks"
@@ -284,12 +307,12 @@ getUserProfile();
           disabled
           class="bg-green-500 hover:bg-green-700 text-white px-10 py-4"
         >
-          Mashing up...
+          Mashing..
         </button>
       </div>
     </div>
 
-    <div class="px-40 mb-20 w-full">
+    <div class="px-4 md:px-40 mb-20 w-full">
       <p
         v-if="isSuccessful"
         class="my-10 bg-green-500 p-4 text-white font-bold"
@@ -303,14 +326,14 @@ getUserProfile();
         class="mb-20 w-full mt-14"
       >
         <div class="">
-          <div class="flex justify-between items-center">
-            <h1 class="text-center text-2xl font-semibold">
+          <div class="flex flex-col md:flex-row justify-between items-center">
+            <h1 class="md:text-2xl text-xl mb-2 md:mb-0 font-semibold">
               Here's a mashup of selected artists
             </h1>
             <button
               v-if="!isCreatingPlaylist"
               @click="createPlaylist()"
-              class="bg-black text-white px-10 py-5"
+              class="bg-black text-white px-5 md:px-10 py-5"
             >
               Save as Playlist
             </button>
@@ -325,9 +348,15 @@ getUserProfile();
                 <tr class="text-left">
                   <th class="border-b border-green-500">#</th>
                   <th class="border-b border-green-500">Title</th>
-                  <th class="border-b border-green-500">Album</th>
-                  <th class="border-b border-green-500">Date Added</th>
-                  <th class="border-b border-green-500">Duration</th>
+                  <th class="border-b hidden md:table-cell border-green-500">
+                    Album
+                  </th>
+                  <th class="border-b hidden md:table-cell border-green-500">
+                    Date Added
+                  </th>
+                  <th class="border-b hidden md:table-cell border-green-500">
+                    Duration
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -380,32 +409,34 @@ getUserProfile();
                   <td class="flex items-center space-x-5">
                     <img
                       :src="track.album?.images?.[0]?.url"
-                      class="w-12 h-12 rounded-sm"
+                      class="w-10 h-10 md:w-12 md:h-12 rounded-sm"
                       alt="artist"
                     />
-                    <div class="w-full flex justify-between items-center">
-                      <div class="flex flex-col">
-                        <p class="text-lg font-bold truncate">
+                    <div
+                      class="w-9/12 md:w-full flex justify-between items-center"
+                    >
+                      <div class="w-9/12 md:w-full flex flex-col truncate">
+                        <p class="text-sm md:text-lg font-bold truncate">
                           {{ track.name }}
                         </p>
-                        <p class="text-sm">
+                        <p class="text-sm truncate">
                           {{ track?.artists?.[0].name }}
                         </p>
                       </div>
                       <img
                         v-if="isPlaying && currentTrack?.id === track.id"
-                        class="w-5 h-5"
+                        class="w-3 h-3 md:w-5 md:h-5"
                         src="../assets/audio.gif"
                       />
                     </div>
                   </td>
-                  <td class="border-b">
+                  <td class="border-b hidden md:table-cell">
                     <p class="text-sm">{{ track?.album?.name }}</p>
                   </td>
-                  <td class="border-b">
+                  <td class="border-b hidden md:table-cell">
                     <p class="text-sm">4 hours ago</p>
                   </td>
-                  <td class="border-b">
+                  <td class="border-b hidden md:table-cell">
                     <p class="text-sm">
                       {{ formatDuration(track.duration_ms) }}
                     </p>
@@ -443,5 +474,17 @@ table.track-list {
   /* border-collapse: separate; */
   border-spacing: 10px;
   *border-collapse: expression("separate", cellSpacing= "10px");
+}
+@media (max-width: 768px) {
+  table.track-list th {
+    margin: 6px;
+    padding: 6px;
+  }
+
+  table.track-list td {
+    margin: 6px;
+    padding: 6px;
+    cursor: pointer;
+  }
 }
 </style>

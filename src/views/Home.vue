@@ -4,7 +4,8 @@ import Header from "../components/Header.vue";
 import { useRouter } from "vue-router";
 // import Header from "../components/Header.vue";s
 
-let token = localStorage.getItem("token");
+let token = localStorage.getItem("SPOTIFY_access_token");
+
 let router = useRouter();
 
 let scope =
@@ -19,6 +20,7 @@ authUrl += "&scope=" + encodeURIComponent(scope);
 authUrl += "&redirect_uri=" + encodeURIComponent(redirect_uri);
 
 const handleGrantPermission = () => {
+  console.log(token);
   if (token) {
     router.push("/welcome");
     return;
@@ -28,31 +30,90 @@ const handleGrantPermission = () => {
 </script>
 
 <template>
-  <div
-    class="
-      flex flex-col
-      bg-gradient-to-b
-      from-green-500
-      via-green-600
-      to-green-800
-      h-screen
-    "
-  >
+  <div class="bg-hero-bg bg-125 bg-bottom-1 flex flex-col bg-gray-900 h-screen">
     <Header />
-    <div class="py-40 px-40 flex space-y-8 flex-col items-start">
-      <h2 class="font-black text-green-200 capitalize text-9xl">
-        Mix it your way.
+    <div
+      class="
+        my-auto
+        mx-auto
+        text-center
+        px-5
+        md:px-40
+        flex flex-col
+        items-center
+      "
+    >
+      <h2
+        class="
+          font-semibold
+          subpixel-antialiased
+          text-green-400
+          capitalize
+          text-6xl
+          md:text-9xl
+          leading-none
+          w-full
+          md:w-3/5
+        "
+      >
+        Create your own mix.
       </h2>
-      <p class="w-3/4 mb-10 text-white font-bold text-5xl">
+      <p
+        class="
+          w-full
+          md:w-3/6
+          text-white
+          font-regular
+          text-xl
+          md:text-3xl
+          leading-snug
+          mb-4
+          mt-4
+          md:mt-0
+        "
+      >
         Be a DJ of your own by creating a mix of songs from your favourite
         artists.
       </p>
-      <button
-        @click="handleGrantPermission()"
-        class="bg bg-white text-green-900 font-extrabold py-5 px-5"
+      <div
+        class="
+          flex flex-col
+          md:flex-row md:items-center
+          justify-center
+          space-y-5
+          md:space-x-5
+          mt-4
+          md:mt-8
+        "
       >
-        Login with Spotify
-      </button>
+        <button
+          @click="handleGrantPermission()"
+          class="
+            bg-white
+            hover:bg-gray-800
+            text-green-600 text-lg
+            md:text-xl
+            font-bold
+            py-5
+            px-5
+          "
+        >
+          Login with Spotify
+        </button>
+        <!-- <button
+          @click="handleGrantPermission()"
+          class="
+            bg-green-600
+            hover:bg-green-800
+            text-white text-xl
+            font-bold
+            py-5
+            px-5
+          "
+        >
+          Login with Deezer
+        </button> -->
+      </div>
     </div>
   </div>
 </template>

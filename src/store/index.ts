@@ -6,8 +6,12 @@ interface StateModel {
   user: UserModel;
 }
 
+const user = JSON.parse(
+  localStorage.getItem("SPOTIFY_user") as any
+) as UserModel;
+
 const state = ref<StateModel>({
-  user: {
+  user: user || {
     id: "",
     name: "",
     profileImage: {} as any,
@@ -15,6 +19,7 @@ const state = ref<StateModel>({
 });
 
 function setUser(user: UserModel) {
+  localStorage.setItem("SPOTIFY_user", JSON.stringify(user));
   state.value.user = user;
 }
 
@@ -31,7 +36,9 @@ async function getUserProfile() {
 }
 
 function logoutUser() {
-  localStorage.removeItem("access_token");
+  localStorage.removeItem("SPOTIFY_access_token");
+  localStorage.removeItem("SPOTIFY_user");
+
   state.value.user = {
     id: "",
     name: "",

@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const token = localStorage.getItem("access_token");
+const token = localStorage.getItem("SPOTIFY_access_token");
 axios.defaults.baseURL = "https://api.spotify.com/v1";
 axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
 
 const headers = () => {
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("SPOTIFY_access_token");
   return {
     headers: { Authorization: `Bearer ${token}` },
   };

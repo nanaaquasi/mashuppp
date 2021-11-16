@@ -2,43 +2,75 @@
 @tailwind components;
 
 @font-face {
-  font-family: "Space Grotesk Regular";
+  font-family: "Lufga";
+  src: url("./assets/fonts/Lufga-ExtraLight.woff") format("woff");
+  font-weight: 200;
   font-style: normal;
-  font-weight: 500;
-  src: local("Space Grotesk Regular"),
-    url("./assets/fonts/SpaceGrotesk-Regular.woff") format("woff");
+  font-display: swap;
 }
 
 @font-face {
-  font-family: "Space Grotesk";
-  font-style: normal;
-  font-weight: 400;
-  src: local("Space Grotesk Light"),
-    url("./assets/fonts/SpaceGrotesk-Light.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Space Grotesk";
-  font-style: normal;
-  font-weight: 700;
-  src: local("Space Grotesk Medium"),
-    url("./assets/fonts/SpaceGrotesk-Medium.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Space Grotesk";
-  font-style: normal;
-  font-weight: 800;
-  src: local("Space Grotesk SemiBold"),
-    url("./assets/fonts/SpaceGrotesk-SemiBold.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Space Grotesk";
-  font-style: normal;
+  font-family: "Lufga";
+  src: url("./assets/fonts/Lufga-Black.woff") format("woff");
   font-weight: 900;
-  src: local("./assets/fonts/Space Grotesk Bold"),
-    url("SpaceGrotesk-Bold.woff") format("woff");
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lufga";
+  src: url("./assets/fonts/Lufga-ExtraBold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lufga";
+  src: url("./assets/fonts/Lufga-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lufga";
+  src: url("./assets/fonts/Lufga-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lufga";
+  src: url("./assets/fonts/Lufga-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lufga";
+  src: url("./assets/fonts/Lufga-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lufga";
+  src: url("./assets/fonts/Lufga-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lufga";
+  src: url("./assets/fonts/Lufga-Thin.woff") format("woff");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
 }
 
 @tailwind utilities;
