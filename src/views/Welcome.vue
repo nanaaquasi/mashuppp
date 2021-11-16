@@ -36,6 +36,19 @@ const shuffledTrackUris = computed(() =>
   shuffledTracks.value.map((track) => track.uri)
 );
 
+document.addEventListener(
+  "play",
+  function (e) {
+    var audios = document.getElementsByTagName("audio");
+    for (var i = 0, len = audios.length; i < len; i++) {
+      if (audios[i] != e.target) {
+        audios[i].pause();
+      }
+    }
+  },
+  true
+);
+
 const formatDuration = (duration: number) => {
   return fancyTimeFormat(duration);
 };
@@ -162,8 +175,6 @@ const playSound = (track: TrackModel) => {
   ) as HTMLAudioElement;
 
   currentTrack.value = track;
-
-  console.log(audioEl);
 
   if (audioEl) {
     if (audioEl.paused) {
