@@ -4,7 +4,16 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", "sans-serif"],
+        sans: ["Lufga", "sans-serif"],
+      },
+      backgroundImage: {
+        "hero-bg": "url(./assets/bursts.svg)",
+      },
+      backgroundSize: {
+        125: "175%",
+      },
+      backgroundPosition: {
+        "bottom-1": "52% 8%",
       },
     },
   },
