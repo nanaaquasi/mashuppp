@@ -2,30 +2,32 @@
 import { ref } from "@vue/reactivity";
 import Header from "../components/Header.vue";
 import { useRouter } from "vue-router";
+import { spotify } from "../apis/spotify.service";
+import { deezer } from "../apis/deezer.service";
 // import Header from "../components/Header.vue";s
-
-let token = localStorage.getItem("SPOTIFY_access_token");
 
 let router = useRouter();
 
-let scope =
-  "user-read-private user-read-email playlist-modify-private playlist-modify-public playlist-read-private playlist-read-collaborative";
-let client_id = import.meta.env.VITE_APP_CLIENT_ID as string;
-let redirect_uri = import.meta.env.VITE_APP_REDIRECT_URL as string;
+const handleGrantPermission = (channel: string) => {
+  localStorage.setItem("channel", channel);
+  let token = localStorage.getItem(channel + "_access_token");
 
-let authUrl = import.meta.env.VITE_APP_AUTH_URL;
-authUrl += "?response_type=token";
-authUrl += "&client_id=" + encodeURIComponent(client_id);
-authUrl += "&scope=" + encodeURIComponent(scope);
-authUrl += "&redirect_uri=" + encodeURIComponent(redirect_uri);
-
-const handleGrantPermission = () => {
-  console.log(token);
   if (token) {
     router.push("/welcome");
     return;
   }
-  window.location.href = authUrl as string;
+
+  switch (channel) {
+    case "SPOTIFY":
+      window.location.href = spotify.authUrl as string;
+      break;
+    case "DEEZER":
+      console.log(deezer.authUrl);
+      window.location.href = deezer.authUrl as string;
+      break;
+    default:
+      break;
+  }
 };
 </script>
 
@@ -81,13 +83,13 @@ const handleGrantPermission = () => {
           md:flex-row md:items-center
           justify-center
           space-y-5
-          md:space-x-5
+          md:space-y-0 md:space-x-5
           mt-4
           md:mt-8
         "
       >
         <button
-          @click="handleGrantPermission()"
+          @click="handleGrantPermission('SPOTIFY')"
           class="
             bg-white
             hover:bg-gray-800
@@ -96,23 +98,40 @@ const handleGrantPermission = () => {
             font-bold
             py-5
             px-5
+            flex
+            items-center
+            space-x-2
           "
         >
           Login with Spotify
+          <img
+            class="w-10 h-10 ml-2"
+            src="https://img.icons8.com/fluency/48/000000/spotify.png"
+          />
         </button>
-        <!-- <button
-          @click="handleGrantPermission()"
+        <button
+          @click="handleGrantPermission('DEEZER')"
           class="
             bg-green-600
             hover:bg-green-800
-            text-white text-xl
+            text-white
+            md:text-xl
+            text-lg
             font-bold
             py-5
             px-5
+            flex
+            items-center
+            space-x-2
           "
         >
           Login with Deezer
-        </button> -->
+
+          <img
+            class="w-10 h-10 ml-2 bg-white p-1 rounded-full"
+            src="https://iconape.com/wp-content/png_logo_vector/deezer-icon.png"
+          />
+        </button>
       </div>
     </div>
   </div>

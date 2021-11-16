@@ -1,13 +1,16 @@
 import { computed, ref } from "vue";
-import { getCurrentUserProfile } from "../apis/spotify.service";
+import { deezer } from "../apis/deezer.service";
+import { spotify } from "../apis/spotify.service";
 import { UserModel } from "../model";
+
+let channel = localStorage.getItem("channel");
 
 interface StateModel {
   user: UserModel;
 }
 
 const user = JSON.parse(
-  localStorage.getItem("SPOTIFY_user") as any
+  localStorage.getItem(channel + "_user") as any
 ) as UserModel;
 
 const state = ref<StateModel>({
@@ -19,12 +22,12 @@ const state = ref<StateModel>({
 });
 
 function setUser(user: UserModel) {
-  localStorage.setItem("SPOTIFY_user", JSON.stringify(user));
+  localStorage.setItem(channel + "_user", JSON.stringify(user));
   state.value.user = user;
 }
 
-async function getUserProfile() {
-  const { data } = await getCurrentUserProfile();
+async function getSpotifyUser() {
+  const { data } = await spotify.getCurrentUserProfile();
 
   const { display_name, images, id } = data;
 
@@ -33,6 +36,31 @@ async function getUserProfile() {
     name: display_name,
     profileImage: images[0].url,
   });
+}
+
+async function getDeezerUser() {
+  const { data } = await deezer.getCurrentUserProfile();
+
+  const { name, picture, id } = data;
+
+  setUser({
+    id,
+    name,
+    profileImage: picture,
+  });
+}
+
+async function getUserProfile() {
+  switch (channel) {
+    case "SPOTIFY":
+      getSpotifyUser();
+      break;
+    case "DEEZER":
+      getDeezerUser();
+      break;
+    default:
+      break;
+  }
 }
 
 function logoutUser() {

@@ -2,17 +2,16 @@
 import { actions, getters } from "../store";
 import Header from "../components/Header.vue";
 import { computed, ref } from "@vue/reactivity";
-import {
-  addTracksToPlaylist,
-  createUserPlaylist,
-  getArtistTopTracks,
-  searchArtists,
-} from "../apis/spotify.service";
-import { ArtistModel, TrackModel } from "../model";
+import { spotify } from "../apis/spotify.service";
+import { ArtistModel, TrackModel, TrackResponseModel } from "../model";
 import { getRandom, fancyTimeFormat } from "../utils";
+import { deezer } from "../apis/deezer.service";
 
 const { getUserProfile } = actions;
 const { user } = getters;
+const channel = localStorage.getItem("channel");
+
+getUserProfile();
 
 const searchQuery = ref("");
 const errorMessage = ref("");
@@ -27,13 +26,16 @@ const isCreatingPlaylist = ref(false);
 const showAutocomplete = ref(false);
 const isPlaying = ref(false);
 const isSuccessful = ref(false);
-
+const isError = ref(false);
 const getSelectedArtists = computed(() => selectedArtists.value);
 const trackCount = ref(10);
 const playlistName = ref("");
 const artists = computed(() => searchResults.value);
 const shuffledTrackUris = computed(() =>
-  shuffledTracks.value.map((track) => track.uri)
+  shuffledTracks.value.map((track) => track?.uri)
+);
+const shuffledTrackIds = computed(() =>
+  shuffledTracks.value.map((track) => track?.id).join(",")
 );
 
 document.addEventListener(
@@ -60,14 +62,40 @@ const searchArtist = async () => {
   }
   if (searchQuery.value.length > 2) {
     showAutocomplete.value = true;
-    const { data } = await searchArtists(searchQuery.value);
 
-    const artists = data.artists.items.map((artist: ArtistModel) => ({
-      id: artist.id,
-      name: artist.name,
-      images: artist.images,
-    }));
-    searchResults.value = artists;
+    switch (channel) {
+      case "SPOTIFY":
+        const { data } = await spotify.searchArtists(searchQuery.value);
+
+        const artists = data.artists.items.map(
+          (artist: any): ArtistModel => ({
+            id: artist.id,
+            name: artist.name,
+            image: artist.images[0].url,
+          })
+        );
+        searchResults.value = artists;
+        break;
+      case "DEEZER":
+        const { data: deezerRes } = await deezer.searchArtists(
+          searchQuery.value
+        );
+
+        console.log("res", deezerRes);
+
+        const res = deezerRes.data.map(
+          (artist: any): ArtistModel => ({
+            id: artist.id,
+            name: artist.name,
+            image: artist.picture,
+            tracklistUrl: artist.tracklist,
+          })
+        );
+        searchResults.value = res;
+        break;
+      default:
+        break;
+    }
   }
 };
 
@@ -103,10 +131,17 @@ const removeSelectedArtist = (artist: ArtistModel) => {
 };
 
 const fetchArtistTopTracks = async (artistId: string) => {
-  return getArtistTopTracks(artistId);
+  switch (channel) {
+    case "DEEZER":
+      return deezer.getArtistTopTracks(artistId);
+    case "SPOTIFY":
+      return spotify.getArtistTopTracks(artistId);
+    default:
+      break;
+  }
 };
 
-const createPlaylist = async () => {
+const createSpotifyPlaylist = async () => {
   isCreatingPlaylist.value = true;
   try {
     let requestBody = {
@@ -118,7 +153,7 @@ const createPlaylist = async () => {
       description: "Created with Mashuppp",
       public: true,
     };
-    const { data: playlist } = await createUserPlaylist(
+    const { data: playlist } = await spotify.createUserPlaylist(
       user.value.id,
       requestBody
     );
@@ -130,7 +165,7 @@ const createPlaylist = async () => {
       position: 0,
     };
 
-    const { data } = await addTracksToPlaylist(id, body);
+    const { data } = await spotify.addTracksToPlaylist(id, body);
 
     isCreatingPlaylist.value = false;
 
@@ -143,9 +178,63 @@ const createPlaylist = async () => {
   }
 };
 
+const createDeezerPlaylist = async () => {
+  isCreatingPlaylist.value = true;
+  try {
+    let requestBody = {
+      title:
+        selectedArtists.value[0].name +
+        " + " +
+        selectedArtists.value[1].name +
+        " and others mix. Created with Mashuppp",
+    };
+    const { data: playlist } = await deezer.createUserPlaylist(
+      user.value.id,
+      requestBody
+    );
+
+    const { id } = playlist;
+
+    let body = {
+      ids: shuffledTrackIds.value,
+    };
+
+    const { data } = await deezer.addTracksToPlaylist(id, body);
+
+    isCreatingPlaylist.value = false;
+
+    if (data.error) {
+      isError.value = true;
+      clearSuccessMessage();
+      return;
+    }
+
+    if (data) {
+      isSuccessful.value = true;
+      clearSuccessMessage();
+    }
+  } catch (error) {
+    isCreatingPlaylist.value = false;
+  }
+};
+
+const createPlaylist = () => {
+  switch (channel) {
+    case "SPOTIFY":
+      createSpotifyPlaylist();
+      break;
+    case "DEEZER":
+      createDeezerPlaylist();
+      break;
+    default:
+      break;
+  }
+};
+
 const clearSuccessMessage = () => {
   setTimeout(() => {
     isSuccessful.value = false;
+    isError.value = false;
   }, 5000);
 };
 
@@ -155,17 +244,61 @@ const fetchSeveralArtistsTopTracks = async () => {
     fetchArtistTopTracks(artist.id)
   );
   const results = await Promise.all(promises);
+
   setTimeout(() => {
     isFetching.value = false;
-    const allTracks = results.map((res) => res.data.tracks);
 
-    const mashed = allTracks.reduce((acc, curr) => {
-      return [...acc, ...curr];
-    }, []);
+    switch (channel) {
+      case "SPOTIFY":
+        const allTracks = results.map((res) => res?.data.tracks);
 
-    console.log({ mashed });
+        const mashed = allTracks.reduce((acc, curr) => {
+          return [...acc, ...curr];
+        }, []);
 
-    shuffledTracks.value = getRandom(mashed, trackCount.value);
+        const mixedTracks: TrackModel[] = mashed.map(
+          (track: TrackResponseModel) => {
+            return {
+              id: track.id,
+              name: track.name,
+              preview_url: track.preview_url,
+              artist: track.artists?.[0],
+              album: track?.album,
+              cover: track.album?.images?.[0].url,
+              duration_ms: track.duration_ms,
+            };
+          }
+        );
+
+        shuffledTracks.value = getRandom(mixedTracks, trackCount.value);
+        break;
+
+      case "DEEZER":
+        const tracks = results.map((res) => res?.data.data);
+        const trackMix = tracks.reduce((acc, curr) => {
+          return [...acc, ...curr];
+        }, []);
+
+        const mashedTracks: TrackModel[] = trackMix.map(
+          (track: TrackResponseModel) => {
+            return {
+              id: track.id,
+              name: track.title,
+              preview_url: track.preview,
+              artist: track.artist,
+              album: track.album,
+              cover: track.album?.cover,
+              duration_ms: track?.duration && track?.duration * 1000,
+            };
+          }
+        );
+
+        shuffledTracks.value = getRandom(mashedTracks, trackCount.value);
+        break;
+
+      default:
+        break;
+    }
   }, 3000);
 };
 
@@ -186,8 +319,6 @@ const playSound = (track: TrackModel) => {
     }
   }
 };
-
-getUserProfile();
 </script>
 <template>
   <div class="h-full w-full">
@@ -197,7 +328,7 @@ getUserProfile();
         class="flex flex-col items-center mt-10 pt-2 md:pt-10 space-y-3 mb-5"
       >
         <h1 class="text-green-400 font-semibold text-4xl md:text-7xl">
-          Welcome, DJ {{ user.name }}.
+          Welcome, DJ {{ user.name?.split(" ")[0] || "" }}.
         </h1>
         <p class="text-white text-center font-regular text-lg md:text-xl">
           Start by adding your favourite artists for the mashup
@@ -219,9 +350,10 @@ getUserProfile();
           @keyup="searchArtist"
           placeholder="Search artist by name"
         />
-        <div v-if="showAutocomplete" class="bg-red-100 h-28 z-50">
+        <div v-if="showAutocomplete" class="bg-red-100 z-50">
           <ul class="list-style-none">
             <li
+              v-if="artists.length > 0"
               v-for="(artist, index) in artists"
               :key="index"
               class="bg-white hover:bg-green-200 p-3"
@@ -230,7 +362,7 @@ getUserProfile();
               <div class="flex flex-col">
                 <div class="flex flex-row items-center">
                   <img
-                    :src="artist.images[0]?.url"
+                    :src="artist.image"
                     class="w-10 h-10 rounded-sm"
                     alt="artist"
                   />
@@ -239,6 +371,9 @@ getUserProfile();
                   </div>
                 </div>
               </div>
+            </li>
+            <li v-else class="bg-white hover:bg-green-200 p-3">
+              No artist found
             </li>
           </ul>
         </div>
@@ -278,7 +413,7 @@ getUserProfile();
           :key="index"
         >
           <img
-            :src="artist.images[0]?.url"
+            :src="artist.image"
             class="w-10 h-10 rounded-full"
             alt="artist"
           />
@@ -328,7 +463,11 @@ getUserProfile();
         v-if="isSuccessful"
         class="my-10 bg-green-500 p-4 text-white font-bold"
       >
-        Playlist has been added to your spotify library.
+        Playlist has been added to your {{ channel?.toLowerCase() }} library.
+      </p>
+      <p v-if="isError" class="my-10 bg-red-400 p-4 text-white font-bold">
+        Something went wrong adding playlist to your
+        {{ channel?.toLowerCase() }} library. Please try again
       </p>
 
       <!-- Results section -->
@@ -354,7 +493,7 @@ getUserProfile();
           </div>
 
           <ul class="border-10 mt-8 border-green-500">
-            <table class="track-list w-full table-auto">
+            <table class="track-list w-full table-auto overflow-hidden">
               <thead>
                 <tr class="text-left">
                   <th class="border-b border-green-500">#</th>
@@ -362,9 +501,9 @@ getUserProfile();
                   <th class="border-b hidden md:table-cell border-green-500">
                     Album
                   </th>
-                  <th class="border-b hidden md:table-cell border-green-500">
+                  <!-- <th class="border-b hidden md:table-cell border-green-500">
                     Date Added
-                  </th>
+                  </th> -->
                   <th class="border-b hidden md:table-cell border-green-500">
                     Duration
                   </th>
@@ -419,19 +558,19 @@ getUserProfile();
                   </audio>
                   <td class="flex items-center space-x-5">
                     <img
-                      :src="track.album?.images?.[0]?.url"
-                      class="w-10 h-10 md:w-12 md:h-12 rounded-sm"
+                      :src="track?.cover"
+                      class="w-12 h-12 md:w-12 md:h-12 rounded-sm"
                       alt="artist"
                     />
                     <div
                       class="w-9/12 md:w-full flex justify-between items-center"
                     >
                       <div class="w-9/12 md:w-full flex flex-col truncate">
-                        <p class="text-sm md:text-lg font-bold truncate">
+                        <p class="text-lg md:text-xl font-bold truncate">
                           {{ track.name }}
                         </p>
-                        <p class="text-sm truncate">
-                          {{ track?.artists?.[0].name }}
+                        <p class="text-lg truncate">
+                          {{ track?.artist?.name }}
                         </p>
                       </div>
                       <img
@@ -442,11 +581,13 @@ getUserProfile();
                     </div>
                   </td>
                   <td class="border-b hidden md:table-cell">
-                    <p class="text-sm">{{ track?.album?.name }}</p>
+                    <p class="text-sm">
+                      {{ track?.album?.name || track?.album?.title }}
+                    </p>
                   </td>
-                  <td class="border-b hidden md:table-cell">
+                  <!-- <td class="border-b hidden md:table-cell">
                     <p class="text-sm">4 hours ago</p>
-                  </td>
+                  </td> -->
                   <td class="border-b hidden md:table-cell">
                     <p class="text-sm">
                       {{ formatDuration(track.duration_ms) }}

@@ -4,15 +4,14 @@ import { useRouter, useRoute } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
-
+const channel = localStorage.getItem("channel");
 let hash = route.hash;
+
+const { access_token } = getParamValues(hash);
 
 const getAccessTokenFromUrl = async () => {
   try {
-    const { access_token } = getParamValues(hash);
-
-    localStorage.setItem("SPOTIFY_access_token", access_token);
-
+    localStorage.setItem(channel + "_access_token", access_token);
     router.push("/welcome");
   } catch (error) {
     router.push("/");

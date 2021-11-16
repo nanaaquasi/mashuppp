@@ -17,6 +17,7 @@ axios.interceptors.response.use(
   },
   (error) => {
     if (error && error.response && error.response.status === 401) {
+      localStorage.clear();
       window.location.replace("/");
     }
     return Promise.reject(error);
