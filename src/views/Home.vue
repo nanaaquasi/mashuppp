@@ -82,56 +82,63 @@ const handleGrantPermission = (channel: string) => {
           flex flex-col
           md:flex-row md:items-center
           justify-center
-          space-y-5
+          space-y-4
           md:space-y-0 md:space-x-5
           mt-4
           md:mt-8
         "
       >
-        <button
-          @click="handleGrantPermission('SPOTIFY')"
-          class="
-            bg-white
-            hover:bg-gray-800
-            text-green-600 text-lg
-            md:text-lg
-            font-bold
-            py-4
-            px-4
-            flex
-            items-center
-            space-x-2
-          "
-        >
-          Login with Spotify
-          <img
-            class="w-10 h-10 ml-2"
-            src="https://img.icons8.com/fluency/48/000000/spotify.png"
-          />
-        </button>
-        <button
-          @click="handleGrantPermission('DEEZER')"
-          class="
-            bg-green-600
-            hover:bg-green-800
-            text-white
-            md:text-lg
-            text-lg
-            font-bold
-            py-4
-            px-4
-            flex
-            items-center
-            space-x-2
-          "
-        >
-          Login with Deezer
+        <div class="flex flex-col justify-center">
+          <button
+            @click="handleGrantPermission('SPOTIFY')"
+            class="
+              bg-white
+              hover:bg-gray-800
+              text-green-600 text-lg
+              md:text-lg
+              font-bold
+              py-4
+              px-4
+              flex
+              items-center
+              space-x-2
+            "
+          >
+            Login with Spotify
+            <img
+              class="w-10 h-10 ml-2"
+              src="https://img.icons8.com/fluency/48/000000/spotify.png"
+            />
+          </button>
+          <p class="text-center text-white mt-2 hidden md:block">&nbsp</p>
+        </div>
+        <div class="flex flex-col justify-center">
+          <button
+            @click="handleGrantPermission('DEEZER')"
+            class="
+              bg-green-600
+              hover:bg-green-800
+              text-white
+              md:text-lg
+              text-lg
+              font-bold
+              py-4
+              px-4
+              flex
+              items-center
+              space-x-2
+            "
+            disabled
+          >
+            Login with Deezer
 
-          <img
-            class="w-10 h-10 ml-2 bg-white p-1 rounded-full"
-            src="https://iconape.com/wp-content/png_logo_vector/deezer-icon.png"
-          />
-        </button>
+            <img
+              class="w-10 h-10 ml-2 bg-white p-1 rounded-full"
+              src="https://iconape.com/wp-content/png_logo_vector/deezer-icon.png"
+            />
+          </button>
+          <p class="text-center text-white mt-2">Coming soon 🥳</p>
+        </div>
       </div>
     </div>
   </div>

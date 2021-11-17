@@ -11,6 +11,12 @@ const { getUserProfile } = actions;
 const { user } = getters;
 const channel = localStorage.getItem("channel");
 
+const token = localStorage.getItem(channel + "_access_token");
+
+if (!token) {
+  window.location.href = "/";
+}
+
 getUserProfile();
 
 const searchQuery = ref("");
