@@ -266,6 +266,7 @@ const fetchSeveralArtistsTopTracks = async () => {
               album: track?.album,
               cover: track.album?.images?.[0].url,
               duration_ms: track.duration_ms,
+              uri: track.uri,
             };
           }
         );
@@ -321,7 +322,7 @@ const playSound = (track: TrackModel) => {
 };
 </script>
 <template>
-  <div class="h-full w-full">
+  <div class="h-full w-screen md:w-full overflow-hidden md:overflow-scroll">
     <Header />
     <div class="w-full flex flex-col items-center bg-gray-900 pb-14">
       <div
@@ -432,7 +433,7 @@ const playSound = (track: TrackModel) => {
         class="md:w-1/2 flex items-center justify-center space-x-5"
       >
         <select
-          class="border-2 border-green-800 w-11/12 md:w-3/6 px-5 py-4"
+          class="border-2 border-green-800 bg-white w-11/12 md:w-3/6 px-5 py-4"
           v-model="trackCount"
           id="count"
           placeholder="Select total tracks"
@@ -458,7 +459,63 @@ const playSound = (track: TrackModel) => {
       </div>
     </div>
 
-    <div class="px-4 md:px-40 mb-20 w-full">
+    <div
+      v-else
+      class="
+        px-4
+        md:px-32
+        flex flex-col
+        items-center
+        justify-between
+        mx-auto
+        text-center
+      "
+    >
+      <h2 class="text-3xl mb-6 font-semibold">Create your mix</h2>
+      <div
+        class="
+          md:px-24
+          flex flex-col
+          md:flex-row
+          items-center
+          justify-between
+          mx-auto
+          md:w-11/12
+          w-full
+          text-center
+          space-y-4
+          md:space-y-0
+        "
+      >
+        <div class="flex flex-col w-11/12 md:w-4/12 items-center">
+          <img
+            class="w-24 h-24 md:w-32 md:h-32 filter grayscale"
+            src="https://img.icons8.com/ios-glyphs/90/26e07f/1.png"
+          />
+          <p class="w-11/12">
+            Search and add up to 5 of your favourite artists.
+          </p>
+        </div>
+        <div class="w-11/12 md:w-4/12 flex flex-col items-center">
+          <img
+            class="w-24 h-24 md:w-32 md:h-32 filter grayscale"
+            src="https://img.icons8.com/ios-glyphs/90/26e07f/2.png"
+          />
+          <p class="w-11/12">
+            A mashup of top songs from each artist is generated.
+          </p>
+        </div>
+        <div class="w-11/12 md:w-4/12 flex flex-col items-center">
+          <img
+            class="w-24 h-24 md:w-32 md:h-32 filter grayscale"
+            src="https://img.icons8.com/ios-glyphs/90/26e07f/3.png"
+          />
+          <p class="w-11/12">Save the mashup to your playlist of choice.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-4 md:px-32 mb-20 w-full">
       <p
         v-if="isSuccessful"
         class="my-10 bg-green-500 p-4 text-white font-bold"
@@ -492,8 +549,17 @@ const playSound = (track: TrackModel) => {
             </button>
           </div>
 
-          <ul class="border-10 mt-8 border-green-500">
-            <table class="track-list w-full table-auto overflow-hidden">
+          <ul
+            class="
+              border-10
+              w-screen
+              md:w-full
+              overflow-hidden
+              mt-8
+              border-green-500
+            "
+          >
+            <table class="track-list w-full table-auto">
               <thead>
                 <tr class="text-left">
                   <th class="border-b border-green-500">#</th>
@@ -563,13 +629,19 @@ const playSound = (track: TrackModel) => {
                       alt="artist"
                     />
                     <div
-                      class="w-9/12 md:w-full flex justify-between items-center"
+                      class="
+                        w-11/12
+                        md:w-6/12
+                        flex
+                        justify-between
+                        items-center
+                      "
                     >
-                      <div class="w-9/12 md:w-full flex flex-col truncate">
-                        <p class="text-lg md:text-xl font-bold truncate">
+                      <div class="w-9/12 md:w-9/12 flex flex-col truncate">
+                        <p class="text-sm md:text-sm font-bold truncate">
                           {{ track.name }}
                         </p>
-                        <p class="text-lg truncate">
+                        <p class="text-sm truncate">
                           {{ track?.artist?.name }}
                         </p>
                       </div>
@@ -580,7 +652,7 @@ const playSound = (track: TrackModel) => {
                       />
                     </div>
                   </td>
-                  <td class="border-b hidden md:table-cell">
+                  <td class="hidden md:table-cell">
                     <p class="text-sm">
                       {{ track?.album?.name || track?.album?.title }}
                     </p>
@@ -588,7 +660,7 @@ const playSound = (track: TrackModel) => {
                   <!-- <td class="border-b hidden md:table-cell">
                     <p class="text-sm">4 hours ago</p>
                   </td> -->
-                  <td class="border-b hidden md:table-cell">
+                  <td class="hidden md:table-cell">
                     <p class="text-sm">
                       {{ formatDuration(track.duration_ms) }}
                     </p>
@@ -600,7 +672,7 @@ const playSound = (track: TrackModel) => {
         </div>
       </section>
       <div class="mt-10 mb-32 flex justify-center" v-if="isFetching">
-        <img class="w-80 h-60" src="../assets/loading.gif" />
+        <img class="w-60 h-40 md:w-80 md:h-60" src="../assets/loading.gif" />
       </div>
     </div>
   </div>

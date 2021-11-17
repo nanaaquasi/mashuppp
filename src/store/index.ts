@@ -64,8 +64,7 @@ async function getUserProfile() {
 }
 
 function logoutUser() {
-  localStorage.removeItem("SPOTIFY_access_token");
-  localStorage.removeItem("SPOTIFY_user");
+  localStorage.clear();
 
   state.value.user = {
     id: "",
