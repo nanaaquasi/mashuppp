@@ -8,6 +8,11 @@ const { logoutUser } = mutations;
 
 const isDropdownShown = ref(false);
 
+const logout = () => {
+  isDropdownShown.value = false;
+  logoutUser();
+};
+
 const showDropdown = () => {
   isDropdownShown.value = !isDropdownShown.value;
 };
@@ -69,7 +74,7 @@ const goHome = () => (window.location.href = "/");
           "
         >
           <!-- <li class="hover:text-gray-800">Account</li> -->
-          <li class="hover:text-gray-800" @click="logoutUser">Logout</li>
+          <li class="hover:text-gray-800" @click="logout">Logout</li>
         </ul>
       </div>
     </ul>
