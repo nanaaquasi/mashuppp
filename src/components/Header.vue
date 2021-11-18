@@ -11,6 +11,8 @@ const isDropdownShown = ref(false);
 const showDropdown = () => {
   isDropdownShown.value = !isDropdownShown.value;
 };
+
+const goHome = () => (window.location.href = "/");
 </script>
 <template>
   <div
@@ -25,7 +27,7 @@ const showDropdown = () => {
       justify-between
     "
   >
-    <div class="flex items-center space-x-2">
+    <div class="flex items-center space-x-2 cursor-pointer" @click="goHome">
       <img
         src="https://img.icons8.com/external-those-icons-fill-those-icons/24/26e07f/external-dj-party-event-those-icons-fill-those-icons.png"
       />
