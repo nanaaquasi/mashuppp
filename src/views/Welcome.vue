@@ -334,7 +334,17 @@ const playSound = (track: TrackModel) => {
       <div
         class="flex flex-col items-center mt-10 pt-2 md:pt-10 space-y-3 mb-5"
       >
-        <h1 class="text-green-400 font-semibold text-4xl md:text-7xl">
+        <h1
+          class="
+            text-transparent
+            bg-clip-text bg-gradient-to-br
+            from-green-200
+            to-green-500
+            font-semibold
+            text-4xl
+            md:text-7xl
+          "
+        >
           Welcome, DJ {{ user.name?.split(" ")[0] || "" }}.
         </h1>
         <p class="text-white text-center font-regular text-lg md:text-xl">

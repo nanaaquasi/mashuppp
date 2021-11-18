@@ -49,7 +49,10 @@ const handleGrantPermission = (channel: string) => {
         class="
           font-semibold
           subpixel-antialiased
-          text-green-400
+          text-transparent
+          bg-clip-text bg-gradient-to-br
+          from-green-200
+          to-green-500
           capitalize
           text-6xl
           md:text-8xl
